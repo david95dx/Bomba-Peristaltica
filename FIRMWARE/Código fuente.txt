@@ -1,0 +1,83 @@
+
+#define EN 8      /* Enable pin for all stepper outputs */
+
+#define X_DIR 5   /* Direction pin for X axis */
+#define X_STEP 2  /* Step pin for X axis */
+
+#define Y_DIR 6   /* Direction pin for Y axis */
+#define Y_STEP 3  /* Step pin for Y axis */
+
+#define Z_DIR 7   /* Direction pin for Z axis */
+#define Z_STEP 4  /* Step pin for Z axis */
+
+#define A_DIR 13  /* Direction pin for Aux driver. Requires D13 and A-DIR pins to be shorted */
+#define A_STEP 12 /* Direction pin for Aux driver. Requires D12 and A-STEP pins to be shorted */
+
+#define X_ENDSTOP 9   /* X axis endstop input pin */
+#define Y_ENDSTOP 10  /* Y axis endstop input pin */
+#define Z_ENDSTOP 11  /* Z axis endstop input pin */
+#define ABORT A0  /* Abort input pin */
+#define HOLD A1   /* Hold input pin */
+#define RESUME A2 /* Resume input pin */
+  
+boolean Direction = LOW; /* Rotational direction of stepper motors */
+
+/* The setup routine runs once when you press reset: */
+void setup() 
+{                
+  /* Initialize serial */
+  Serial.begin(9600);
+  
+  /* Configure the steper drive pins as outputs */ 
+  pinMode(EN, OUTPUT); 
+  pinMode(X_DIR, OUTPUT); 
+  pinMode(X_STEP, OUTPUT); 
+  pinMode(Y_DIR, OUTPUT); 
+  pinMode(Y_STEP, OUTPUT); 
+  pinMode(Z_DIR, OUTPUT); 
+  pinMode(Z_STEP, OUTPUT); 
+  pinMode(A_DIR, OUTPUT); 
+  pinMode(A_STEP, OUTPUT); 
+  
+  /* Configure the control pins as inputs with pullups */
+  pinMode(X_ENDSTOP, INPUT_PULLUP);
+  pinMode(Y_ENDSTOP, INPUT_PULLUP);
+  pinMode(Z_ENDSTOP, INPUT_PULLUP);
+
+  pinMode(ABORT, INPUT_PULLUP);
+  pinMode(HOLD, INPUT_PULLUP);
+  pinMode(RESUME, INPUT_PULLUP);
+
+  /* Enable the X, Y, Z & Aux stepper outputs */
+  digitalWrite(EN, LOW); //Low to enable
+     digitalWrite(X_DIR, Direction); // Low = CW 
+    digitalWrite(Y_DIR, Direction); // Low = CW 
+    digitalWrite(Z_DIR, Direction); // Low = CW 
+    digitalWrite(A_DIR, Direction); // Low = CW 
+}
+
+// the loop routine runs over and over again forever:
+void loop() 
+{
+  while(digitalRead(X_ENDSTOP)==1){}
+  while(digitalRead(Y_ENDSTOP)==1)
+  {
+  digitalWrite(X_STEP, HIGH); 
+  delay(1); 
+  digitalWrite(Y_STEP, HIGH); 
+  delay(1); 
+  digitalWrite(Z_STEP, HIGH); 
+  delay(1);    
+  digitalWrite(A_STEP, HIGH); 
+  delay(1); 
+  
+  digitalWrite(X_STEP, LOW);  
+  delay(1); 
+  digitalWrite(Y_STEP, LOW); 
+  delay(1); 
+  digitalWrite(Z_STEP, LOW);  
+  delay(1); 
+  digitalWrite(A_STEP, LOW);  
+  delay(1);
+  }
+}
